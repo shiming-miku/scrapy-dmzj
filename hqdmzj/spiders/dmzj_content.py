@@ -10,7 +10,7 @@ class dmzjContentpider(scrapy.Spider):
     ]
     def parse(self,response):
         print response.url
-        for sel in response.css('.news_content_con'):
+        for sel in response.xpath('//div[@class="news_content_con"]'):
             dmzjitem = HqdmzjItem()
-            dmzjitem['content'] = sel.extract()
+            dmzjitem['content'] = sel.extract().encode('utf-8')
             yield dmzjitem
