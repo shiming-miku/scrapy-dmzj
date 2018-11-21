@@ -43,8 +43,8 @@ class HqdmzjPipeline(object):
         # 写入数据库内容
         # 这里根据需求自行设置要写入的字段及值
         # 保存的字段内容有双引号时前面变量写单引号
-        #sql = 'insert into dmzj (time, title,cover,url,author) values ("%s","%s","%s","%s","%s")' % (item['time'], item['title'],item['cover'],item['url'],item['author'])
-        sql = "insert into dmzj (content) values ('%s')" % (item['content'])
+        sql = "insert into dmzj (time, title,cover,url,author,content) values ('%s','%s','%s','%s','%s','%s')" % (item['time'], item['title'], item['cover'], item['url'], item['author'], item['content'])
+        #sql = "insert into dmzj (content) values ('%s')" % (item['content'])
         # 执行sql语句
         self.cursor.execute(sql)
 
