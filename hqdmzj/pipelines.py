@@ -2,6 +2,8 @@
 # 导入库
 from scrapy.utils.project import get_project_settings
 import pymysql
+from hqdmzj.items import HqdmzjItem
+from hqdmzj.items import ContentItem
 
 # 写入数据库
 class HqdmzjPipeline(object):
@@ -43,12 +45,14 @@ class HqdmzjPipeline(object):
         # 写入数据库内容
         # 这里根据需求自行设置要写入的字段及值
         # 保存的字段内容有双引号时前面变量写单引号
-        sql = "insert into dmzj (time, title,cover,url,author,content) values ('%s','%s','%s','%s','%s','%s')" % (item['time'], item['title'], item['cover'], item['url'], item['author'], item['content'])
-        #sql = "insert into dmzj (content) values ('%s')" % (item['content'])
-        # 执行sql语句
-        self.cursor.execute(sql)
-
-        # 需要强制提交数据，否则数据回滚之后，数据库为空
-        self.conn.commit()
-
-        return item
+        if isinstance(item, HqdmzjItem):
+            #sql = "insert into dmzj (time, title,cover,url,author,content) values ('%s','%s','%s','%s','%s','%s')" % (item['time'], item['title'], item['cover'], item['url'], item['author'], item['content'])
+            sql = "insert into dmzj (time, title,cover,url,author) values ('%s','%s','%s','%s','%s')" % (item['time'], item['title'], item['cover'], item['url'], item['author'])
+            self.cursor.execute(sql)
+            self.conn.commit()
+            return item
+        else:
+            sql = "insert into content (url,text) values ('%s','%s')" % (item['url'], item['text'])
+            self.cursor.execute(sql)
+            self.conn.commit()
+            return item

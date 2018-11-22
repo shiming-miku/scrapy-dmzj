@@ -17,3 +17,8 @@ class HqdmzjItem(scrapy.Item):
     url = scrapy.Field()
     author = scrapy.Field()
     content = scrapy.Field()
+
+
+class ContentItem(scrapy.Item):
+    text = scrapy.Field()
+    url = scrapy.Field()
