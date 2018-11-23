@@ -20,8 +20,8 @@ class dmzjContentpider(scrapy.Spider):
             except IndexError:
                 try:
                     sel.xpath('.//span').extract()[0]
-                    for self in sel.xpath('.//span'):
-                        contentItem['text'] += self.xpath('.//text()').extract()[0].encode('utf-8')
+                    for self in sel.xpath('.//text()'):
+                        contentItem['text'] += self.extract().encode('utf-8')
                 except IndexError:
                     try:
                         contentItem['text'] = sel.xpath('.//text()').extract()[0].encode('utf-8')

@@ -24,8 +24,8 @@ class DmzjSpider(scrapy.Spider):
             dmzjitem['title'] = sel.xpath('.//a/@title').extract()[0].encode("utf-8")
             dmzjitem['cover'] = sel.xpath('.//a').xpath('img/@src').extract()[0].encode("utf-8")
             dmzjitem['url'] = sel.xpath('.//a/@href').extract()[0].encode("utf-8")
-            #yield Request(url=dmzjitem['url'], callback=self.get_content, meta={'dmzjitem':dmzjitem})
-            #yield Request(url=dmzjitem['url'], callback=self.insert_content, meta={'dmzjitem':dmzjitem})
+            # yield Request(url=dmzjitem['url'], callback=self.get_content, meta={'dmzjitem':dmzjitem})
+            # yield Request(url=dmzjitem['url'], callback=self.insert_content, meta={'dmzjitem':dmzjitem})
             item.append(dmzjitem)
 
         for sel in response.xpath('//p[@class="head_con_p_o"]'):
@@ -45,22 +45,29 @@ class DmzjSpider(scrapy.Spider):
             dmzjitem = item[i]
             yield Request(url=dmzjitem['url'], callback=self.insert_content, meta={'dmzjitem': dmzjitem})
 
-    def insert_content(self,response):
+    def insert_content(self, response):
         for sel in response.xpath('//div[@class="news_content_con"]/p'):
             contentItem = ContentItem()
             contentItem['url'] = response.meta['dmzjitem']['url']
+            contentItem['text'] = ''
             try:
                 sel.xpath('.//img/@src').extract()[0]
             except IndexError:
                 try:
-                    contentItem['text'] = sel.xpath('.//text()').extract()[0].encode('utf-8')
+                    sel.xpath('.//span').extract()[0]
+                    for self in sel.xpath('.//text()'):
+                        contentItem['text'] += self.extract().encode('utf-8')
                 except IndexError:
-                    continue
+                    try:
+                        contentItem['text'] = sel.xpath('.//text()').extract()[0].encode('utf-8')
+                    except IndexError:
+                        continue
+
             else:
                 contentItem['text'] = sel.xpath('.//img/@src').extract()[0].encode('utf-8')
             yield contentItem
 
-    def get_content(self,response):
+    def get_content(self, response):
         for sel in response.xpath('//div[@class="news_content_con"]'):
             dmzjitem = response.meta['dmzjitem']
             dmzjitem['content'] = sel.xpath('.').extract()[0].encode("utf-8")

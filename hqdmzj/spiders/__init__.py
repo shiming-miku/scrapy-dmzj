@@ -3,4 +3,4 @@
 # Please refer to the documentation for information on how to create and manage
 # your spiders.
 #from scrapy import cmdline
-#cmdline.execute("scrapy crawl dmzj".split());
+#cmdline.execute("scrapy crawl dmzjcontent -o items.json".split());
